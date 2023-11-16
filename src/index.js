@@ -1,15 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-<<<<<<< Updated upstream
-=======
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Home from './pages/HomePage';
->>>>>>> Stashed changes
 import reportWebVitals from './reportWebVitals';
-import LoginPage from './pages/LoginPage'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
