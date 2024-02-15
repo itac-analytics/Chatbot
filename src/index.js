@@ -2,7 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import Home from './pages/HomePage';
+import ProtectedRoute from './components/ProtectedRoute'
 import RegisterPage from './pages/RegisterPage';
 import Home from './pages/HomePage';
 import ProtectedRoute from './components/ProtectedRoute'
@@ -12,8 +16,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Router  >
       <Routes>
-        <Route path="/login" element={<LoginPage/>} />
-        <Route path="/register" element={<RegisterPage/>} />
+         <Route path="/login" element={<LoginPage/>} />
+        <Route path="/register" element={<RegisterPage/>} /> 
          <Route path = "/home" element= {<ProtectedRoute><Home/></ProtectedRoute>}> 
         </Route> 
         <Route path="*" element={<Navigate to="/login" />} />
