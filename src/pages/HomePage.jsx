@@ -6,6 +6,7 @@ const Home = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [messages, setMessages] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -28,6 +29,35 @@ const Home = () => {
     user: `User ${index + 1}`,
     message: `Conversations and its Description Summary`,
   }));
+  const handleFileInputChange = (event) => {
+    const selectedFile = event.target.files[0];
+
+    // Check if the selected file is not null
+    if (selectedFile) {
+      // Check file type
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowedTypes.includes(selectedFile.type)) {
+        alert('Please upload files of type pdf, doc, or docx.');
+        event.target.value = null; // Reset the value of the file input element
+        return; // Exit the function if the file type is not allowed
+      }
+
+      // Concatenate the new file with the existing array of uploaded files
+      setUploadedFiles(prevFiles => [...prevFiles, selectedFile]);
+
+      event.target.value = null; // Reset the value of the file input element
+    }
+  };
+
+
+  const handleDeleteFile = (indexToDelete) => {
+    // Filter out the file with the specified indexToDelete
+    const updatedFiles = uploadedFiles.filter((file, index) => index !== indexToDelete);
+
+    // Update the state with the new array of files
+    setUploadedFiles(updatedFiles);
+  };
+
 
   return (
     <div className="flex h-screen bg-black-300">
@@ -164,30 +194,43 @@ const Home = () => {
           Knowledge Base
         </h2>
         </div> 
-        <div className='rounded-md ml-10 w-56 bg-gray-50  h-1/2'>
-          <p className='font-semibold text-center hover:subpixel-antialiased'>Documents for your bot</p>
-          <p className='text-gray-400 text-xs non-italic px-8 pt-4 font-medium '>Please upload the documents in here, the maximum file size for each upload is 5MB.</p>
-        <div className=' p-8 mt-12 ml-12 rounded-md border-2 border-blue-300 w-1/2 h-1/4 border-dotted outline-4'>
-          <div className='ml-2'>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-        </div>
-        <div className='absoulte  justify-start align-text-top w-16 '>
-        <p className='text-xs text-blue-300 font-semibold '>Add Pdf's and Doc's</p>
-        </div>
-        </div>
-        <div className='w-56 h-1/3 bg-gray-50 mt-10 rounded-b-md'>
-          <h3 className='text-xs  font-semibold text-gray-500'>Uploaded Documents:</h3>
-          <hr className="border-gray-400 border-dashed my-1 mt-2" />
-          <div className='flex'>
-          <p className='flex text-xs font-bold text-gray-500 mt-4'>1.Machine_learning.doc </p>
-          <div  className='mt-3'>
-          <svg className='mt-4' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-          </svg>
+        <div className='rounded-md ml-10 w-56 bg-gray-50 h-1/2'>
+          <label htmlFor="fileInput" className='cursor-pointer'>
+            <p className='font-semibold text-center hover:subpixel-antialiased'>Documents for your bot</p>
+            <p className='text-gray-400 text-xs non-italic px-8 pt-4 font-medium'>Please upload the documents here. The maximum file size for each upload is 5MB.</p>
+          </label>
+          <input
+            id="fileInput"
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileInputChange}
+            className="hidden"
+          />
+          <div className='p-8 mt-12 ml-12 rounded-md border-2 border-blue-300 w-1/2 h-1/4 border-dotted outline-4'>
+            <div className='ml-2'>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+            </div>
+            <div className='absolute justify-start align-text-top w-16'>
+              <label htmlFor="fileInput" className='cursor-pointer'>
+                <p className='text-xs text-blue-300 font-semibold'>Add PDF's, DOC's, and DOCX's</p>
+              </label>
+            </div>
           </div>
-          </div>
+          <div className='w-56 h-1/3 bg-gray-50 mt-10 rounded-b-md'>
+            <h3 className='text-xs font-semibold text-gray-500'>Uploaded Documents:</h3>
+            <hr className="border-gray-400 border-dashed my-1 mt-2" />
+            {uploadedFiles.map((file, index) => (
+              <div key={index} className='flex'>
+                <p className='flex text-xs font-bold text-gray-500 mt-4'>{`${index + 1}. ${file.name}`}</p>
+                <div className='mt-2 ml-auto'>
+                  <svg className='cursor-pointer mt-3 w-3 h-3' onClick={() => handleDeleteFile(index)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </div>
+              </div>
+            ))}
           
           </div>  
 
